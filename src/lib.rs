@@ -204,11 +204,11 @@ pub extern "C" fn get_storage(tx: *mut (), address: *const u8, key: *const u8) -
 pub extern "C" fn destroy_storage(tx: *mut (), address: *const u8) {
     let tx: &mut MutableTransaction = unsafe { &mut *tx.cast() };
     let address = Address::from_slice(unsafe { std::slice::from_raw_parts(address, 20) });
-    tx.destroy_storage(address)
+    tx.destroy_storage(address).unwrap()
 }
 
 #[no_mangle]
-pub extern "C" fn debug_dump(tx: *mut ()) {
+pub extern "C" fn debug_dump(_tx: *mut ()) {
     unimplemented!()
     //let tx: &mut MutableTransaction = unsafe { &mut *tx.cast() };
     //tx.debug_dump_db().unwrap();
