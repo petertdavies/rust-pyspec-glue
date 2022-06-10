@@ -1,4 +1,4 @@
-use ethereum_pyspec_db::{Account, MutableTransaction, DB};
+use ethereum_pyspec_db::{Account, Db, MutableTransaction};
 use ethereum_types::{Address, H256, U256};
 use std::path::Path;
 
@@ -6,24 +6,24 @@ use std::path::Path;
 pub extern "C" fn open(path: *const u8, path_len: usize) -> *mut () {
     let slice: &[u8] = unsafe { std::slice::from_raw_parts(path, path_len) };
     let path = Path::new(std::str::from_utf8(slice).unwrap());
-    Box::into_raw(Box::new(DB::open(path).unwrap())).cast()
+    Box::into_raw(Box::new(Db::file(path).unwrap())).cast()
 }
 
 #[no_mangle]
 pub extern "C" fn open_in_memory() -> *mut () {
-    Box::into_raw(Box::new(DB::open_in_memory().unwrap())).cast()
+    Box::into_raw(Box::new(Db::memory().unwrap())).cast()
 }
 
 #[no_mangle]
 pub extern "C" fn drop_db(db: *mut ()) {
-    let db: Box<DB> = unsafe { Box::from_raw(db.cast()) };
+    let db: Box<Db> = unsafe { Box::from_raw(db.cast()) };
     drop(db)
 }
 
 #[no_mangle]
 pub extern "C" fn begin_mutable(db: *mut ()) -> *mut () {
-    let db: &mut DB = unsafe { &mut *db.cast() };
-    Box::into_raw(Box::new(db.begin_mutable().unwrap())).cast()
+    let db: &mut Db = unsafe { &mut *db.cast() };
+    Box::into_raw(Box::new(db.begin_mut().unwrap())).cast()
 }
 
 #[no_mangle]
@@ -65,7 +65,7 @@ static mut METADATA_CELL: Vec<u8> = Vec::new();
 pub extern "C" fn get_metadata(tx: *mut (), key: *const u8, key_len: usize) -> CGetMetadata {
     let tx: &mut MutableTransaction = unsafe { &mut *tx.cast() };
     let key = unsafe { std::slice::from_raw_parts(key, key_len) };
-    match tx.get_metadata(key).unwrap() {
+    match tx.metadata(key).unwrap() {
         None => CGetMetadata {
             exists: false,
             value: std::ptr::null(),
@@ -153,7 +153,7 @@ static mut CODE_CELL: Vec<u8> = Vec::new();
 pub extern "C" fn get_account_optional(tx: *mut (), address: *const u8) -> CGetAccount {
     let tx: &mut MutableTransaction = unsafe { &mut *tx.cast() };
     let address = Address::from_slice(unsafe { std::slice::from_raw_parts(address, 20) });
-    let account = tx.get_account_optional(address).unwrap();
+    let account = tx.try_account(address).unwrap();
     match account {
         None => CGetAccount {
             exists: false,
@@ -163,7 +163,11 @@ pub extern "C" fn get_account_optional(tx: *mut (), address: *const u8) -> CGetA
             code_len: 0,
         },
         Some(account) => unsafe {
-            CODE_CELL = tx.get_code(account.code_hash).unwrap().unwrap().to_vec();
+            CODE_CELL = tx
+                .code_from_hash(account.code_hash)
+                .unwrap()
+                .unwrap()
+                .to_vec();
             account.balance.to_big_endian(&mut BALANCE_CELL);
             CGetAccount {
                 exists: true,
@@ -193,7 +197,7 @@ pub extern "C" fn get_storage(tx: *mut (), address: *const u8, key: *const u8) -
     let address = Address::from_slice(unsafe { std::slice::from_raw_parts(address, 20) });
     let key = H256::from_slice(unsafe { std::slice::from_raw_parts(key, 32) });
     unsafe {
-        tx.get_storage(address, key)
+        tx.storage(address, key)
             .unwrap()
             .to_big_endian(&mut STORAGE_CELL);
         STORAGE_CELL.as_ptr()
