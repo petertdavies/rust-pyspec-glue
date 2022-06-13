@@ -186,7 +186,7 @@ dependencies = [
 [[package]]
 name = "ethereum-pyspec-db"
 version = "0.0.0"
-source = "git+https://github.com/petertdavies/rust-pyspec-db?rev=114b8f94d2325b1211e4093d72f1af1c2edf7e8f#114b8f94d2325b1211e4093d72f1af1c2edf7e8f"
+source = "git+https://github.com/petertdavies/rust-pyspec-db?rev=40b83a763809b427c8b60261bbde6180633a1277#40b83a763809b427c8b60261bbde6180633a1277"
 dependencies = [
  "anyhow",
  "arrayvec",
@@ -592,7 +592,7 @@ dependencies = [
 
 [[package]]
 name = "rust-pyspec-glue"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "ethereum-pyspec-db",
  "ethereum-types",
