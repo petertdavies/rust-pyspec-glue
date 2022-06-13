@@ -11,6 +11,10 @@ class DB:
             self.db = lib.open(ffi.from_buffer(path.encode("ascii")), len(path))
         self.tx = None
 
+    @staticmethod
+    def delete(path: str) -> None:
+        lib.delete_db(ffi.from_buffer(path.encode("ascii")), len(path))
+
     def __del__(self) -> None:
         if self.tx is not None:
             lib.rollback_mutable(self.tx)

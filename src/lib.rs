@@ -15,6 +15,13 @@ pub extern "C" fn open_in_memory() -> *mut () {
 }
 
 #[no_mangle]
+pub extern "C" fn delete_db(path: *const u8, path_len: usize) {
+    let slice: &[u8] = unsafe { std::slice::from_raw_parts(path, path_len) };
+    let path = Path::new(std::str::from_utf8(slice).unwrap());
+    Db::delete(path).unwrap()
+}
+
+#[no_mangle]
 pub extern "C" fn drop_db(db: *mut ()) {
     let db: Box<Db> = unsafe { Box::from_raw(db.cast()) };
     drop(db)
