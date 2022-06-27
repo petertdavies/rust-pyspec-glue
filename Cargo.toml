@@ -9,7 +9,7 @@ name = "rust_pyspec_glue"
 crate-type = ["cdylib"]
 
 [dependencies]
-ethereum-pyspec-db = { git = "https://github.com/petertdavies/rust-pyspec-db", rev = "40b83a763809b427c8b60261bbde6180633a1277" }
+ethereum-pyspec-db = { git = "https://github.com/petertdavies/rust-pyspec-db", rev = "aa99305b9c5c0bbfc8fd41f0a8c02ce4631f087c" }
 ethereum-types = "0.12.1"
 
 [package.metadata.maturin]

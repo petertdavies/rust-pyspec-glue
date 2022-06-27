@@ -186,7 +186,7 @@ dependencies = [
 [[package]]
 name = "ethereum-pyspec-db"
 version = "0.0.0"
-source = "git+https://github.com/petertdavies/rust-pyspec-db?rev=40b83a763809b427c8b60261bbde6180633a1277#40b83a763809b427c8b60261bbde6180633a1277"
+source = "git+https://github.com/petertdavies/rust-pyspec-db?rev=aa99305b9c5c0bbfc8fd41f0a8c02ce4631f087c#aa99305b9c5c0bbfc8fd41f0a8c02ce4631f087c"
 dependencies = [
  "anyhow",
  "arrayvec",
