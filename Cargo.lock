@@ -592,7 +592,7 @@ dependencies = [
 
 [[package]]
 name = "rust-pyspec-glue"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "ethereum-pyspec-db",
  "ethereum-types",
