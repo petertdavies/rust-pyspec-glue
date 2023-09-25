@@ -15,3 +15,6 @@ dependencies = ["cffi"]
 
 [tool.maturin]
 bindings = "cffi"
+python-source = "python"
+module-name = "rust_pyspec_glue"
+
