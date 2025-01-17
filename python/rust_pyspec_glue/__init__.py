@@ -137,6 +137,11 @@ class DB:
             raise Exception("No transaction in progress")
         lib.destroy_storage(self.tx, ffi.from_buffer(address))
 
+    def has_storage(self, address: bytes) -> bytes:
+        if self.tx is None:
+            raise Exception("No transaction in progress")
+        return lib.has_storage(self.tx, ffi.from_buffer(address))
+
     def debug_dump(self) -> None:
         if self.tx is None:
             raise Exception("No transaction in progress")

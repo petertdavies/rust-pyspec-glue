@@ -219,6 +219,13 @@ pub extern "C" fn destroy_storage(tx: *mut (), address: *const u8) {
 }
 
 #[no_mangle]
+pub extern "C" fn has_storage(tx: *mut (), address: *const u8) -> bool {
+    let tx: &mut MutableTransaction = unsafe { &mut *tx.cast() };
+    let address = Address::from_slice(unsafe { std::slice::from_raw_parts(address, 20) });
+    tx.has_storage(address).unwrap()
+}
+
+#[no_mangle]
 pub extern "C" fn debug_dump(_tx: *mut ()) {
     unimplemented!()
     //let tx: &mut MutableTransaction = unsafe { &mut *tx.cast() };

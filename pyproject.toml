@@ -1,5 +1,5 @@
 [build-system]
-requires = ["maturin>=0.12,<0.13"]
+requires = ["maturin>=1.7.4,<2"]
 build-backend = "maturin"
 
 [project]
@@ -12,6 +12,7 @@ classifiers = [
 ]
 
 dependencies = ["cffi"]
+dynamic = ["version"]
 
 [tool.maturin]
 bindings = "cffi"
